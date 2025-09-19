@@ -50,28 +50,28 @@ function AllNotesSection() {
 
   //Update the filteredNotes based on the searchQuery
   useEffect(() => {
-    setIsSearching(searchQuery !== "");
+  setIsSearching(searchQuery !== "");
 
-    if (sideBarMenu[0].isSelected) {
-      const updateFilteredNotes = allNotes
-        .filter((note) => !note.isTrash)
-        .filter((note) => {
-          return note.title.toLowerCase().includes(searchQuery.toLowerCase());
-        });
+  if (sideBarMenu[0].isSelected) {
+    const updateFilteredNotes = allNotes
+      .filter((note) => !note.isTrash)
+      .filter((note) =>
+        note.title.toLowerCase().includes(searchQuery.toLowerCase())
+      );
 
-      setFilteredNotes(updateFilteredNotes);
-    }
+    setFilteredNotes(updateFilteredNotes);
+  }
 
-    if (sideBarMenu[1].isSelected) {
-      const updateFilteredNotes = allNotes
-        .filter((note) => !note.isTrash && note.isFavorite)
-        .filter((note) => {
-          return note.title.toLowerCase().includes(searchQuery.toLowerCase());
-        });
+  if (sideBarMenu[1].isSelected) {
+    const updateFilteredNotes = allNotes
+      .filter((note) => !note.isTrash && note.isFavorite)
+      .filter((note) =>
+        note.title.toLowerCase().includes(searchQuery.toLowerCase())
+      );
 
-      setFilteredNotes(updateFilteredNotes);
-    }
-  }, [searchQuery]);
+    setFilteredNotes(updateFilteredNotes);
+  }
+}, [searchQuery, allNotes, sideBarMenu]);
 
   useEffect(() => {
     if (isSearching === false) {
@@ -87,9 +87,10 @@ function AllNotesSection() {
         );
       }
     }
-  }, [isSearching]);
+  }, [isSearching, allNotes, filterIsTrashedNotes, setTagsClicked, sideBarMenu]);
 
   //This useEffect will trigger this code, whenever we make a change in the all Notes
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     //If all Snippets is selected, show all the snippets that are not trashed
     if (sideBarMenu[0].isSelected) {
@@ -150,8 +151,8 @@ function AllNotesSection() {
 
       setFilteredNotes(updateNotes);
     }
-  }, [allNotes, tagsClicked]);
-
+  }, [allNotes, tagsClicked, sideBarMenu]);
+// eslint-disable-next-line react-hooks/exhaustive-deps
   useLayoutEffect(() => {
     if (openContentNote) {
       setOpenContentNote(false);
@@ -173,7 +174,7 @@ function AllNotesSection() {
       const filteredTrashedNotes = allNotes.filter((note) => note.isTrash);
       setFilteredNotes(filteredTrashedNotes);
     }
-  }, [sideBarMenu]);
+  }, [sideBarMenu, allNotes, filterIsTrashedNotes, openContentNote, setOpenContentNote]);
 
   function ShimmerNoteEffect() {
     return (

@@ -90,13 +90,14 @@ function TagsWindow() {
   const sortedTags: SingleTagType[] = sortAllTags(allNotes, allTags);
 
   //This useEffect will clear the search query if something changes in the allTags Array
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     setSearchQuery("");
   }, [allTags]);
 
   useEffect(() => {
     setAllTags(sortedTags);
-  }, [allNotes]);
+  }, [allNotes, sortedTags, setAllTags]);
 
   return (
     <div

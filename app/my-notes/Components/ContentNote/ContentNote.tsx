@@ -1,6 +1,6 @@
 import { useGlobalContext } from "@/ContextApi";
 import { SingleCodeLanguageType, SingleNoteType } from "@/app/Types";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import StyleOutlinedIcon from "@mui/icons-material/StyleOutlined";
 import TitleOutlinedIcon from "@mui/icons-material/TitleOutlined";
@@ -103,21 +103,10 @@ function ContentNote() {
     }
   }, [openContentNote, selectedNote]);
 
-  useEffect(() => {
-    if (singleNote && singleNote.title !== "") {
-      debouncedSaveNote(singleNote, isNewNote);
-    }
-  }, [singleNote, isNewNote]);
+ 
 
-  const debouncedSaveNote = useMemo(
-    () =>
-      debounce((note: SingleNoteType, isNew: boolean) => {
-        saveNoteInDB(note, isNew);
-      }, 500),
-    []
-  );
-
-  async function saveNoteInDB(note: SingleNoteType, isNew: boolean) {
+  const saveNoteInDB = useCallback(
+  async (note: SingleNoteType, isNew: boolean) => {
     const url = isNew ? "/api/snippets" : `/api/snippets?snippetId=${note._id}`;
     const method = isNew ? "POST" : "PUT";
     const { _id, ...noteData } = note;
@@ -161,8 +150,24 @@ function ContentNote() {
     } catch (error) {
       console.error("Error saving note:", error);
     }
-  }
+  },
+  [setAllNotes, setIsNewNote]
+);
 
+const debouncedSaveNote = useMemo(
+    () =>
+      debounce((note: SingleNoteType, isNew: boolean) => {
+        saveNoteInDB(note, isNew);
+      }, 500),
+    [saveNoteInDB]
+  );
+
+  useEffect(() => {
+    if (singleNote && singleNote.title !== "") {
+      debouncedSaveNote(singleNote, isNewNote);
+    }
+  }, [singleNote, isNewNote, debouncedSaveNote, setAllNotes, setIsNewNote]);
+ 
   useEffect(() => {
     if (selectedLanguage && singleNote) {
       const newLanguage = selectedLanguage.name;
@@ -181,7 +186,7 @@ function ContentNote() {
 
       setSingleNote(updateSingleNote);
     }
-  }, [selectedLanguage]);
+  }, [selectedLanguage, allNotes, setAllNotes, singleNote]);
 
   return (
     <div
@@ -318,7 +323,7 @@ function NoteTags({
       setSelectedTags([...selectedTags, tag]);
     }
   }
-
+// eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const newSingleNote = { ...singleNote, tags: selectedTags };
     const newAllNotes = allNotes.map((note) => {
@@ -331,7 +336,7 @@ function NoteTags({
 
     setAllNotes(newAllNotes);
     setSingleNote(newSingleNote);
-  }, [selectedTags]);
+  }, [selectedTags, allNotes, setAllNotes, setSingleNote, singleNote]);
 
   //This function create an dynamic array to store the tags chosen by the user
 
@@ -408,19 +413,19 @@ function NoteTags({
       (tag) => tag.name !== "All"
     );
 
-    const handleClickOutside = (event: MouseEvent) => {
-      if (tagsRef.current && !tagsRef.current.contains(event.target as Node)) {
-        setIsOpened(false);
-      }
-    };
-
     useEffect(() => {
-      document.addEventListener("mousedown", handleClickOutside);
+  const handleClickOutside = (event: MouseEvent) => {
+    if (tagsRef.current && !tagsRef.current.contains(event.target as Node)) {
+      setIsOpened(false);
+    }
+  };
 
-      return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
-      };
-    }, []);
+  document.addEventListener("mousedown", handleClickOutside);
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside);
+  };
+}, [setIsOpened]); // no dependencies needed
+
 
     return (
       <div
@@ -520,7 +525,7 @@ function CodeBlock({
     selectedNoteObject: { selectedNote, setSelectedNote },
     allNotesObject: { allNotes, setAllNotes },
   } = useGlobalContext();
-
+// eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (selectedNote) {
       //If selectedNote is not empty when we click on add a snippet
@@ -539,7 +544,7 @@ function CodeBlock({
         setSelectedLanguage(findLanguage);
       }
     }
-  }, [selectedNote]);
+  }, [selectedNote, setSelectedLanguage]);
 
   function handleChange(code: string) {
     const newSingleNote = { ...singleNote, code: code };
@@ -649,7 +654,7 @@ function CodeBlock({
 
     useEffect(() => {
       textRef.current?.focus();
-    }, [isOpened]);
+    }, []);
 
     // Filtering logic
     const [filteredLanguages, setFilteredLanguages] = useState(allLanguages);
