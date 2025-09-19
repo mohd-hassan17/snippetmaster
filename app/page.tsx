@@ -5,6 +5,9 @@ import { mainColor } from "@/Colors";
 import Link from "next/link";
 import { useAuth } from "@clerk/nextjs";
 import Image from "next/image";
+import {  Search, Upload, Zap } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
 export default function Home() {
   return (
     <div className="poppins">
@@ -12,7 +15,7 @@ export default function Home() {
       <CTASection />
       <div className="w-full flex justify-center items-center mt-10">
         <Image
-          src={"/app.jpg"}
+          src={"/snip-light.png"}
           alt="dashboard"
           width={900}
           height={400}
@@ -82,23 +85,29 @@ function Buttons() {
 
 function CTASection() {
   return (
-    <div className="flex flex-col mx-16 items-center mt-[120px] gap-6 ">
-      <h2 className="font-bold text-2xl text-center">
-        Organize Your Code Snippets
-        <span className={`text-purple-600`}> Efficiently!</span>
-      </h2>
-      <p className="text-center text-sm w-[450px] max-sm:w-full text-slate-500 ">
-        With our advanced tagging and search features, you can quickly find the
-        snippet you need, right when you need it. Spend less time searching for
-        code and more time writing it.
-      </p>
+   <div className="flex flex-col items-center text-center px-6 md:px-12 lg:px-16 mt-24 md:mt-32 gap-6">
+  <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold leading-tight bg-gradient-to-r from-purple-700 via-purple-500 to-pink-400 bg-clip-text text-transparent">
+    Save & Organize Your Code
+    <br />
+    <span className="text-purple-600">Efficiently!</span>
+  </h1>
 
-      <button
-        className={`block   px-9 py-3 text-sm font-medium text-white transition   focus:outline-none  `}
-        type="button"
+  <p className="text-sm sm:text-base md:text-lg text-gray-600 max-w-2xl leading-relaxed">
+    With our advanced tagging and search features, you can quickly find the snippet you need, right when you need it. Spend less time searching for code and more time writing it.
+  </p>
+
+  <div className="flex flex-col sm:flex-row gap-4 justify-center">
+    <Link href="/my-notes" className="w-full sm:w-auto">
+      <Button
+        size="lg"
+        className="w-full sm:w-auto bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 flex items-center justify-center"
       >
-        {`Let's get started!`}
-      </button>
-    </div>
+        <Upload className="w-5 h-5 mr-2" />
+        Upload Snippet
+      </Button>
+    </Link>
+  </div>
+</div>
+
   );
 }

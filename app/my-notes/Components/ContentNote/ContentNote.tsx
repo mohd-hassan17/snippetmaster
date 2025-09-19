@@ -616,7 +616,7 @@ function CodeBlock({
           theme="tomorrow"
           name="blah2"
           width="100%"
-          height="1500px"
+          height="500px"
           fontSize={14}
           lineHeight={19}
           showPrintMargin={false}
