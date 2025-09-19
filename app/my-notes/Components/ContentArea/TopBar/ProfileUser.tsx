@@ -1,7 +1,6 @@
 "use client";
 
 import { UserButton, useAuth, useUser } from "@clerk/nextjs";
-import Image from "next/image";
 
 function ProfileUser() {
   const { user } = useUser();
@@ -23,13 +22,11 @@ function ProfileUser() {
       {!user ? (
         loadingImage
       ) : (
-       <Image
-  src={imageUrl!}
-  alt={`${user?.firstName || ""} ${user?.lastName || ""}`}
-  width={36}   
-  height={36}  
-  className="rounded-full mb-[5px]"
-/>
+        <img
+          src={imageUrl}
+          alt={`${user?.firstName} ${user?.lastName}`}
+          className="w-9 h-9 rounded-full mb-[5px] "
+        />
       )}
 
       <div

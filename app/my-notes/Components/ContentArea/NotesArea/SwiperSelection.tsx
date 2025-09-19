@@ -24,14 +24,15 @@ export default function SwiperSelection() {
   } = useGlobalContext();
 
   const [tagsSelected, setTagsSelected] = useState<boolean[]>([]);
+
   useEffect(() => {
     if (searchQuery.trim().length === 0) {
       const newTagsSelected = Array(allTags.length).fill(false);
       newTagsSelected[0] = true;
       setTagsSelected(newTagsSelected);
     }
-  }, [searchQuery, allTags]);
-// eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery]);
+
   useEffect(() => {
     setTagsClicked((prevTagsClicked) => {
       const newTagsClicked = allTags.reduce(
@@ -55,7 +56,7 @@ export default function SwiperSelection() {
 
       return newTagsClicked;
     });
-  }, [tagsSelected, allTags, setTagsClicked]);
+  }, [tagsSelected]);
 
   //Reset the tagsSelected state when allTags changes
   useEffect(() => {
@@ -67,7 +68,6 @@ export default function SwiperSelection() {
   }, [allTags]);
 
   //Reset the tagsSelected and tagsClicked state when sideBarMenu changes
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (sideBarMenu) {
       const newTagsSelected = Array(allTags.length).fill(false);
@@ -76,7 +76,7 @@ export default function SwiperSelection() {
       setTagsClicked(newTagsClicked);
       setTagsSelected(newTagsSelected);
     }
-  }, [sideBarMenu, allTags, setTagsClicked]);
+  }, [sideBarMenu]);
 
   const handleTagClick = (index: number) => {
     const newTagsSelected = [...tagsSelected];

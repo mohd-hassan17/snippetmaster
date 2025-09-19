@@ -50,28 +50,28 @@ function AllNotesSection() {
 
   //Update the filteredNotes based on the searchQuery
   useEffect(() => {
-  setIsSearching(searchQuery !== "");
+    setIsSearching(searchQuery !== "");
 
-  if (sideBarMenu[0].isSelected) {
-    const updateFilteredNotes = allNotes
-      .filter((note) => !note.isTrash)
-      .filter((note) =>
-        note.title.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+    if (sideBarMenu[0].isSelected) {
+      const updateFilteredNotes = allNotes
+        .filter((note) => !note.isTrash)
+        .filter((note) => {
+          return note.title.toLowerCase().includes(searchQuery.toLowerCase());
+        });
 
-    setFilteredNotes(updateFilteredNotes);
-  }
+      setFilteredNotes(updateFilteredNotes);
+    }
 
-  if (sideBarMenu[1].isSelected) {
-    const updateFilteredNotes = allNotes
-      .filter((note) => !note.isTrash && note.isFavorite)
-      .filter((note) =>
-        note.title.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+    if (sideBarMenu[1].isSelected) {
+      const updateFilteredNotes = allNotes
+        .filter((note) => !note.isTrash && note.isFavorite)
+        .filter((note) => {
+          return note.title.toLowerCase().includes(searchQuery.toLowerCase());
+        });
 
-    setFilteredNotes(updateFilteredNotes);
-  }
-}, [searchQuery, allNotes, sideBarMenu]);
+      setFilteredNotes(updateFilteredNotes);
+    }
+  }, [searchQuery]);
 
   useEffect(() => {
     if (isSearching === false) {
@@ -87,10 +87,9 @@ function AllNotesSection() {
         );
       }
     }
-  }, [isSearching, allNotes, filterIsTrashedNotes, setTagsClicked, sideBarMenu]);
+  }, [isSearching]);
 
   //This useEffect will trigger this code, whenever we make a change in the all Notes
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     //If all Snippets is selected, show all the snippets that are not trashed
     if (sideBarMenu[0].isSelected) {
@@ -151,8 +150,8 @@ function AllNotesSection() {
 
       setFilteredNotes(updateNotes);
     }
-  }, [allNotes, tagsClicked, sideBarMenu]);
-// eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allNotes, tagsClicked]);
+
   useLayoutEffect(() => {
     if (openContentNote) {
       setOpenContentNote(false);
@@ -174,7 +173,7 @@ function AllNotesSection() {
       const filteredTrashedNotes = allNotes.filter((note) => note.isTrash);
       setFilteredNotes(filteredTrashedNotes);
     }
-  }, [sideBarMenu, allNotes, filterIsTrashedNotes, openContentNote, setOpenContentNote]);
+  }, [sideBarMenu]);
 
   function ShimmerNoteEffect() {
     return (
@@ -477,7 +476,7 @@ function NoteHeader({
     <div className="flex  justify-between   items-center     mx-4 ">
       <span
         onClick={() => clickedNoteTitle()}
-        className={`font-bold text-lg  w-[90%]  cursor-pointer hover:text-purple-600 `}
+        className={`font-bold text-lg  w-[90%]     cursor-pointer hover:text-purple-600 `}
       >
         {truncateString(title, 60)}
       </span>
@@ -556,10 +555,6 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ language, code }) => {
       <SyntaxHighlighter
         language={"javascript"}
         style={darkMode[1].isSelected ? oneDark : materialLight}
-        customStyle={{
-      minHeight: "186px", // 👈 ensures height
-      width: "100%",      // 👈 expands inside parent
-    }}     // 👈 expands inside parent
       >
         {truncateString(code, 300)}
       </SyntaxHighlighter>

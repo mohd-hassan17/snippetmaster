@@ -443,7 +443,6 @@ export default function GlobalContextProvider({
       setSwappedIndex(null);
     }
 
-    console.log(selectedNote);
   }, [openContentNote, selectedNote, allNotes, swappedIndex]);
 
   useEffect(() => {

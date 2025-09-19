@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import DataObjectIcon from "@mui/icons-material/DataObject";
 import { mainColor } from "@/Colors";
 import Link from "next/link";
@@ -13,7 +14,7 @@ export default function Home() {
     <div className="poppins">
       <Navbar />
       <CTASection />
-      <div className="w-full flex justify-center items-center mt-10">
+      <div className="w-full flex justify-center items-center mt-8">
         <Image
           src={"/snip-light.png"}
           alt="dashboard"
@@ -84,8 +85,20 @@ function Buttons() {
 }
 
 function CTASection() {
+
+  const { isSignedIn } = useAuth();
+  const router = useRouter();
+
+  const handleClick = () => {
+    if (!isSignedIn) {
+      router.push("/sign-up"); 
+    } else {
+      router.push("/my-notes"); 
+    }
+  };
+
   return (
-   <div className="flex flex-col items-center text-center px-6 md:px-12 lg:px-16 mt-24 md:mt-32 gap-6">
+   <div className="flex flex-col items-center text-center px-6 md:px-12 lg:px-16 mt-20 md:mt-24 gap-6">
   <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold leading-tight bg-gradient-to-r from-purple-700 via-purple-500 to-pink-400 bg-clip-text text-transparent">
     Save & Organize Your Code
     <br />
@@ -97,16 +110,15 @@ function CTASection() {
   </p>
 
   <div className="flex flex-col sm:flex-row gap-4 justify-center">
-    <Link href="/my-notes" className="w-full sm:w-auto">
       <Button
         size="lg"
+        onClick={handleClick}
         className="w-full sm:w-auto bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 flex items-center justify-center"
       >
         <Upload className="w-5 h-5 mr-2" />
         Upload Snippet
       </Button>
-    </Link>
-  </div>
+    </div>
 </div>
 
   );
